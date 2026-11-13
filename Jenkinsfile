@@ -42,6 +42,26 @@ pipeline {
                 }
             }
         }
+
+        stage('SonarQube Cloud Analysis') {
+            steps {
+                script {
+                    def scannerHome = tool 'SonarScanner'
+
+                    withSonarQubeEnv('SonarQubeCloud-DevSecOps') {
+                        sh """
+                            ${scannerHome}/bin/sonar-scanner \
+                            -Dsonar.projectKey=Aadith1422_jenkins-devsecops-pipeline \
+                            -Dsonar.organization=aadith1422 \
+                            -Dsonar.sources=app \
+                            -Dsonar.tests=tests \
+                            -Dsonar.test.inclusions=**/test_*.py \
+                            -Dsonar.exclusions=.venv/**,**/__pycache__/**,.pytest_cache/**
+                        """
+                    }
+                }
+            }
+        }
     }
 
     post {
